@@ -30,6 +30,22 @@ class CategoriasService{
         return datos;
     }
 
+    async updateCategoria(body,id){
+        const datos = await this.categoriasModel.update(this.collection,body,id).then(res=>{
+            console.log(res);
+            return res;
+        });
+        return datos;
+    }
+
+    async deleteCategoria(id){
+        const datos = await this.categoriasModel.delete(this.collection,id).then(res=>{
+            console.log(res);
+            return res;
+        })
+        return datos;
+    }
+
 }
 
 module.exports = CategoriasService;

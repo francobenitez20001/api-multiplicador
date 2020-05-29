@@ -47,6 +47,33 @@ function categoriasApi(app) {
             next(error);
         }
     })
+
+    router.put('/:id',async(req,res,next)=>{
+        const {body:categoria} = req;
+        const {id} = req.params;
+        try {
+            const data = await categorias.updateCategoria(categoria,id);
+            res.status(200).json({
+                data:data,
+                message:'Categoria modificada'
+            });
+        } catch (error) {
+            next(error);
+        }
+    });
+
+    router.delete('/:id',async(req,res,next)=>{
+        const {id} = req.params;
+        try {
+            const data = await categorias.deleteCategoria(id);
+            res.status(200).json({
+                data:data,
+                message:'Categoria eliminada'
+            });
+        } catch (error) {
+            next(error);
+        }
+    })
 }
 
 module.exports = categoriasApi;

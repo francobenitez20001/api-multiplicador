@@ -35,9 +35,7 @@ class CategoriasModel{
 
     update(collection,body,id){
         return new Promise((resolve,reject)=>{
-            let query = `UPDATE ${collection} SET nombre = '${body.nombre}',apellido = '${body.apellido}',
-                                                  descripcion = '${body.descripcion}', foto = '${body.foto}'
-                        WHERE idAutor = ${id}`;
+            const query = `CALL SP_CATEGORIA_ADD_UPDATE(${id},'${body.categoria}');`;
             this.db.query(query,(error,res,fiels)=>{
                 if(error) throw reject(error);
                 resolve(res);
@@ -47,7 +45,7 @@ class CategoriasModel{
 
     delete(collection,id){
         return new Promise((resolve,reject)=>{
-            this.db.query(`DELETE FROM ${collection} WHERE idAutor = ${id}`,(err,res,fields)=>{
+            this.db.query(`CALL SP_CATEGORIA_DELETE(${id})`,(err,res,fields)=>{
                 if(err) throw reject(err);
                 resolve(res);
             })
