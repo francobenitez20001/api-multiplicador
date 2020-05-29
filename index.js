@@ -9,6 +9,7 @@ app.use(express.json());
 //importacion de rutas
 const autoresApi = require('./routes/autores.js');
 const categoriasApi = require('./routes/categorias');
+const notasApi = require('./routes/notas');
 
 //definicion de rutas
 // app.get('/',(req,res)=>{
@@ -16,6 +17,7 @@ const categoriasApi = require('./routes/categorias');
 // })
 autoresApi(app);
 categoriasApi(app);
+notasApi(app);
 
 app.listen(config.port,()=>{
     console.log(`listening http://localhost:${config.port}`);
