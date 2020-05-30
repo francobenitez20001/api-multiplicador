@@ -10,14 +10,13 @@ app.use(express.json());
 const autoresApi = require('./routes/autores.js');
 const categoriasApi = require('./routes/categorias');
 const notasApi = require('./routes/notas');
+const archivosApi = require('./routes/archivos');
 
 //definicion de rutas
-// app.get('/',(req,res)=>{
-//     res.send('hola')
-// })
 autoresApi(app);
 categoriasApi(app);
 notasApi(app);
+archivosApi(app);
 
 app.listen(config.port,()=>{
     console.log(`listening http://localhost:${config.port}`);
