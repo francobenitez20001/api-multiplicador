@@ -1,5 +1,6 @@
 const express = require('express');
 const NotasService = require('../services/Notas');
+const upload = require('../lib/multer');
 
 function notasApi(app) {
     const router = express.Router();
@@ -35,7 +36,7 @@ function notasApi(app) {
         }
     });
 
-    router.post('/',async(req,res,next)=>{
+    router.post('/',upload.single('header'),async(req,res,next)=>{
         if(req.file == undefined){
             return res.status(500).json({
                 message:'No se encontro la imagen'
@@ -44,11 +45,10 @@ function notasApi(app) {
         const {body:nota} = req;
         const {file:imagen} = req;
         try {
-            // const data = await notas.createNota(nota);
+            const data = await notas.createNota(nota,imagen);
             console.log(req);
-            
             res.status(200).json({
-                data:imagen,
+                data:data,
                 message:'Nota agregada'
             });
         } catch (error) {
