@@ -23,9 +23,9 @@ class AutoresModel{
         })
     }
 
-    create(collection,body){
+    create(collection,body,avatar){
         return new Promise((resolve,reject)=>{
-            let query = `INSERT INTO ${collection} (nombre,apellido,descripcion,foto) VALUES ('${body.nombre}','${body.apellido}','${body.descripcion}','${body.foto}')`;
+            let query = `INSERT INTO ${collection} (nombre,apellido,descripcion,foto) VALUES ('${body.nombre}','${body.apellido}','${body.descripcion}','${avatar.filename}')`;
             this.db.query(query,(error,results,fields)=>{
                 if(error) throw reject(error);
                 resolve(results);
@@ -33,10 +33,10 @@ class AutoresModel{
         })
     };
 
-    update(collection,body,id){
+    update(collection,body,id,foto){
         return new Promise((resolve,reject)=>{
             let query = `UPDATE ${collection} SET nombre = '${body.nombre}',apellido = '${body.apellido}',
-                                                  descripcion = '${body.descripcion}', foto = '${body.foto}'
+                                                  descripcion = '${body.descripcion}', foto = '${foto.filename}'
                         WHERE idAutor = ${id}`;
             this.db.query(query,(error,res,fiels)=>{
                 if(error) throw reject(error);

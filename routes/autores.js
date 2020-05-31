@@ -1,5 +1,6 @@
 const express = require('express');
 const AutoresService = require('../services/autores.js');
+const upload = require('../lib/multer');
 
 function autoresApi(app) {
     const router = express.Router();
@@ -35,12 +36,13 @@ function autoresApi(app) {
         }
     });
 
-    router.post('/',async(req,res,next)=>{
+    router.post('/',upload.single('foto'),async(req,res,next)=>{
         const {body:autor} = req;
+        const {file:avatar} = req;
         try {
-            const data = await autores.create(autor);
+            const data = await autores.create(autor,avatar);
             res.status(200).json({
-                id:data,
+                info:data,
                 message:'Se ha creado el autor'
             });
         } catch (error) {
@@ -48,13 +50,14 @@ function autoresApi(app) {
         }
     });
 
-    router.put('/:id',async(req,res,next)=>{
+    router.put('/:id',upload.single('foto'),async(req,res,next)=>{
         const {id} = req.params;
         const {body:autor} = req;
+        const {file:foto} = req;
         try {
-            const data = await autores.update(autor,id);
+            const data = await autores.update(autor,id,foto);
             res.status(200).json({
-                data:id,
+                info:data,
                 message:'Autor modificado'
             });
         } catch (error) {

@@ -21,15 +21,15 @@ class AutoresService {
         return datos;
     }
 
-    async create(body){
-        const datos = await this.AutoresModel.create(this.collection,body).then(res=>{
+    async create(body,avatar){
+        const datos = await this.AutoresModel.create(this.collection,body,avatar).then(res=>{
             return res.insertId;
         })
         return datos;
     }
 
-    async update(body,id){
-        const datos = await this.AutoresModel.update(this.collection,body,id).then(res=>{
+    async update(body,id,foto){
+        const datos = await this.AutoresModel.update(this.collection,body,id,foto).then(res=>{
             return res;
         })
         return datos;
