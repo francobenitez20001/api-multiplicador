@@ -12,7 +12,7 @@ function autoresApi(app) {
         try {
             const data = await autores.getAutores();
             console.log('la data es: '+ data);
-        
+            
             res.status(200).json({
                 data:data || [],
                 message:'Autores listados'
