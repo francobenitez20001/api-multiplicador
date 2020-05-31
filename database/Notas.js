@@ -42,12 +42,12 @@ class NotasModel{
         })
     };
 
-    create(collection,body){
+    create(collection,body,imagen){
         return new Promise((resolve,reject)=>{
             const query = `CALL SP_NOTAS_ADD_UPDATE(${body.idNota},${body.idAutor},${body.idCategoria},
-                '${body.titulo}','${body.resumen}','${body.contenido}','${body.header}',${body.estado});`;
+                '${body.titulo}','${body.resumen}','${body.contenido}','${imagen.filename}',${body.estado});`;
             this.db.query(query,(error,results,fields)=>{
-                if(error) throw reject(error);
+                if(error) return console.log(error);
                 resolve(results);
             })
         })

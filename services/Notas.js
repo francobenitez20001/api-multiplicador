@@ -22,8 +22,8 @@ class NotasService{
         return datos;
     };
 
-    async createNota(body){
-        const datos = await this.notasModel.create(this.collection,body).then(res=>{
+    async createNota(body,imagen){
+        const datos = await this.notasModel.create(this.collection,body,imagen).then(res=>{
             console.log(res);
             return res;
         })

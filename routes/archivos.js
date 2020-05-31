@@ -1,11 +1,37 @@
 const express = require('express');
 const ArchivosService = require('../services/Archivos');
+const path = require('path');
+const multer = require('multer');
 
 function archivosApi(app) {
     const router = express.Router();
     //a partir de esta url, todo lo que pase voy a manejarlo desde este archivo
     app.use("/api/archivos",router);
     const archivos = new ArchivosService();
+
+    //como quiero almacenar las imagenes
+    const storage = multer.diskStorage({
+        destination:'./public/img',
+        filename:(req,file,cb)=>{
+            cb(null,file.originalname);
+        }
+    })
+
+    const upload = app.use(multer({
+        storage:storage,
+        dest:'./public/img',
+        limits:{fieldSize:10000000000},
+        fileFilter:(req,file,cb)=>{
+            //validando extensiones.
+            const fileTypes = /jpeg|jpg|png|pptx|xlsx|xls|gif/;//extensiones aceptadas
+            const mimetype = fileTypes.test(file.mimetype);
+            const extname = fileTypes.test(path.extname(file.originalname));
+            if (mimetype && extname) {
+                return cb(null,true);
+            }
+            cb(JSON.stringify({status:400,message:"Archivo no soportado"}));
+        }
+    }).array('files'));
 
     router.get('/',async (req,res,next)=>{
         try {
@@ -35,12 +61,13 @@ function archivosApi(app) {
         }
     });
 
-    router.post('/',async(req,res,next)=>{
+    router.post('/',upload,async(req,res,next)=>{
         const {body:archivo} = req;
+        const {files:imagenes} = req;
         try {
-            const data = await archivos.createArchivo(archivo);
+            const data = await archivos.createArchivo(archivo,imagenes);
             res.status(200).json({
-                id:data,
+                info:data,
                 message:'Se ha creado el archivo'
             });
         } catch (error) {

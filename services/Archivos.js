@@ -22,8 +22,10 @@ class ArchivosService{
         return datos;
     };
 
-    async createArchivo(body){
-        const datos = await this.ArchivosModel.create(this.collection,body).then(res=>{
+    async createArchivo(body,imagenes){
+        console.log(imagenes);
+        
+        const datos = await this.ArchivosModel.create(this.collection,body,imagenes).then(res=>{
             console.log(res);
             return res;
         })

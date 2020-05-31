@@ -6,6 +6,7 @@ function notasApi(app) {
     app.use('/api/notas',router);
     const notas = new NotasService();
 
+
     router.get('/',async(req,res,next)=>{
         try{
             const data = await notas.getNotas();
@@ -35,12 +36,19 @@ function notasApi(app) {
     });
 
     router.post('/',async(req,res,next)=>{
+        if(req.file == undefined){
+            return res.status(500).json({
+                message:'No se encontro la imagen'
+            })
+        };
         const {body:nota} = req;
+        const {file:imagen} = req;
         try {
-            const data = await notas.createNota(nota);
-            console.log(data);
+            // const data = await notas.createNota(nota);
+            console.log(req);
+            
             res.status(200).json({
-                data:data,
+                data:imagen,
                 message:'Nota agregada'
             });
         } catch (error) {

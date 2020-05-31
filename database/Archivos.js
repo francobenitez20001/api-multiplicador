@@ -22,13 +22,24 @@ class ArchivosModel{
         })
     }
 
-    create(collection,body){
+    create(collection,body,files){
         return new Promise((resolve,reject)=>{
-            let query = `CALL SP_ARCHIVOS_ADD_UPDATE(${body.idArchivo},${body.idNota},'${body.archivo}')`;
-            this.db.query(query,(error,results,fields)=>{
-                if(error) throw reject(error);
-                resolve(results);
-            })
+            let logError = [];
+            for (let index = 0; index < files.length; index++) {
+                this.db.query(`
+                    CALL SP_ARCHIVOS_ADD_UPDATE(${body.idArchivo},${body.idNota},'${files[index].filename}')`,(error,results,fields)=>{
+                    if(error){
+                        console.log(error);
+                        
+                        reject(error)
+                    };
+                })
+            };
+            if(logError.length==0){
+                resolve('Imagenes subidas')
+            }else{
+                reject('Problemas al subir los archivos a la db');
+            }
         })
     };
 
