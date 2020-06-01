@@ -47,7 +47,7 @@ class NotasModel{
             const query = `CALL SP_NOTAS_ADD_UPDATE(${body.idNota},${body.idAutor},${body.idCategoria},
                 '${body.titulo}','${body.resumen}','${body.contenido}','${imagen.filename}',${body.estado});`;
             this.db.query(query,(error,results,fields)=>{
-                if(error) return console.log(error);
+                if(error) return reject(error);
                 resolve(results);
             })
         })
