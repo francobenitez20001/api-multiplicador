@@ -8,7 +8,6 @@ class ArchivosModel{
         return new Promise((resolve,reject)=>{
             this.db.query(`SELECT * FROM ${collection}`,(err,res,fields)=>{
                 if(err) throw reject(err);
-                this.db.disconect();
                 resolve(res);
             })
         })
