@@ -13,7 +13,7 @@ class CategoriasModel{
             })
         })
     };
-
+ 
     get(collection,id){
         return new Promise((resolve,reject)=>{
             this.db.query(`SELECT * FROM ${collection} WHERE idCategoria = ${id}`,(err,results,fields)=>{
