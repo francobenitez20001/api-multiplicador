@@ -1,8 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const path = require('path');
 const app = express();
 
+app.use(cors());
 
 const {config} = require('./config/index');
 
