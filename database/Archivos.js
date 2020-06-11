@@ -22,6 +22,15 @@ class ArchivosModel{
         })
     }
 
+    getByNota(collection,idNota){
+        return new Promise((resolve,reject)=>{
+            this.db.query(`SELECT * FROM ${collection} WHERE idNota = ${idNota}`,(err,results,fields)=>{
+                if(err) throw reject(err);
+                resolve(results);
+            })
+        })
+    }
+
     create(collection,body,files){
         return new Promise((resolve,reject)=>{
             let logError = [];

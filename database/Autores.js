@@ -25,7 +25,7 @@ class AutoresModel{
 
     create(collection,body,avatar){
         return new Promise((resolve,reject)=>{
-            let query = `INSERT INTO ${collection} (nombre,apellido,descripcion,foto) VALUES ('${body.nombre}','${body.apellido}','${body.descripcion}','${avatar.filename}')`;
+            let query = `INSERT INTO ${collection} (nombre,apellido,descripcion,foto,twitter) VALUES ('${body.nombre}','${body.apellido}','${body.descripcion}','${avatar.filename}','${avatar.twitter}')`;
             this.db.query(query,(error,results,fields)=>{
                 if(error) throw reject(error);
                 resolve(results);
@@ -36,7 +36,8 @@ class AutoresModel{
     update(collection,body,id,foto){
         return new Promise((resolve,reject)=>{
             let query = `UPDATE ${collection} SET nombre = '${body.nombre}',apellido = '${body.apellido}',
-                                                  descripcion = '${body.descripcion}', foto = '${foto.filename}'
+                                                  descripcion = '${body.descripcion}', foto = '${foto.filename}',
+                                                  twitter = '${body.twitter}'
                         WHERE idAutor = ${id}`;
             this.db.query(query,(error,res,fiels)=>{
                 if(error) throw reject(error);

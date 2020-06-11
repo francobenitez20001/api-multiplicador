@@ -25,7 +25,7 @@ class CategoriasModel{
 
     create(collection,body){
         return new Promise((resolve,reject)=>{
-            const query = `CALL SP_CATEGORIA_ADD_UPDATE(${body.idCategoria},'${body.categoria}');`;
+            const query = `CALL SP_CATEGORIA_ADD_UPDATE(${body.idCategoria},'${body.categoria}','${body.icono}');`;
             this.db.query(query,(error,results,fields)=>{
                 if(error) throw reject(error);
                 resolve(results);
@@ -35,7 +35,7 @@ class CategoriasModel{
 
     update(collection,body,id){
         return new Promise((resolve,reject)=>{
-            const query = `CALL SP_CATEGORIA_ADD_UPDATE(${id},'${body.categoria}');`;
+            const query = `CALL SP_CATEGORIA_ADD_UPDATE(${id},'${body.categoria}','${body.icono}');`;
             this.db.query(query,(error,res,fiels)=>{
                 if(error) throw reject(error);
                 resolve(res);

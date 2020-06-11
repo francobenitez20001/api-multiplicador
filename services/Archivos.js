@@ -22,6 +22,14 @@ class ArchivosService{
         return datos;
     };
 
+    async getArchivosByNota(idNota){
+        const datos = await this.ArchivosModel.getByNota(this.collection,idNota).then(res=>{
+            console.log(res);
+            return res;
+        });
+        return datos;
+    }
+
     async createArchivo(body,imagenes){
         console.log(imagenes);
         

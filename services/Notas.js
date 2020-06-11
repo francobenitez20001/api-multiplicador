@@ -6,8 +6,8 @@ class NotasService{
         this.collection = 'notas';
     }
 
-    async getNotas(){
-        const datos = await this.notasModel.getWithRelations().then(res=>{
+    async getNotas(limit){
+        const datos = await this.notasModel.getWithRelations(limit,null).then(res=>{
             console.log(res);
             return res;
         })
@@ -15,12 +15,20 @@ class NotasService{
     };
 
     async getNota(id){
-        const datos = await this.notasModel.getWithRelations(true,id).then(res=>{
+        const datos = await this.notasModel.getWithRelations(false,id).then(res=>{
             console.log(res);
             return res;
         })
         return datos;
     };
+
+    async getNotasByAutor(idAutor){
+        const datos = await this.notasModel.getNotasByAutor(idAutor).then(res=>{
+            console.log(res);
+            return res;
+        });
+        return datos;
+    }
 
     async createNota(body,imagen){
         const datos = await this.notasModel.create(this.collection,body,imagen).then(res=>{

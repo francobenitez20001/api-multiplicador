@@ -1,18 +1,19 @@
 const express = require('express');
 const NotasService = require('../services/Notas');
+const ArchivosService = require('../services/Archivos');
 const upload = require('../lib/multer');
 
 function notasApi(app) {
     const router = express.Router();
     app.use('/api/notas',router);
     const notas = new NotasService();
-
+    const archivos = new ArchivosService();
 
     router.get('/',async(req,res,next)=>{
         try{
-            const data = await notas.getNotas();
+            const {limit} = req.query;
+            const data = await notas.getNotas(limit);
             console.log('la data es: '+ data);
-        
             res.status(200).json({
                 data:data || [],
                 message:'Notas listadas'
@@ -26,9 +27,11 @@ function notasApi(app) {
         const {id} = req.params;
         try {
             const data = await notas.getNota(id);
+            const resource = await archivos.getArchivosByNota(id);
             console.log('la data es: '+data);
             res.status(200).json({
                 data:data || [],
+                resource:resource || [],
                 message:'Nota listada'
             });
         } catch (error) {

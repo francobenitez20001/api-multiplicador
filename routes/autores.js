@@ -1,5 +1,6 @@
 const express = require('express');
 const AutoresService = require('../services/autores.js');
+const NotasService = require('../services/Notas');
 const upload = require('../lib/multer');
 
 function autoresApi(app) {
@@ -7,6 +8,7 @@ function autoresApi(app) {
     //a partir de esta url, todo lo que pase voy a manejarlo desde este archivo
     app.use("/api/autores",router);
     const autores = new AutoresService();
+    const notas = new NotasService();
 
     router.get('/',async (req,res,next)=>{
         try {
@@ -26,9 +28,11 @@ function autoresApi(app) {
         try {
             const {id} = req.params;
             const data = await autores.getAutor(id);
+            const posteos = await notas.getNotasByAutor(id);
             console.log(data);
             res.status(200).json({
                 data:data || [],
+                notas:posteos || [],
                 message: 'Autor Listado'
             });
         } catch (error) {
