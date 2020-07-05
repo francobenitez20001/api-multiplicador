@@ -2,6 +2,17 @@ const express = require('express');
 const AutoresService = require('../services/autores.js');
 const NotasService = require('../services/Notas');
 const upload = require('../lib/multer');
+const path = require('path');
+const {Storage} = require('@google-cloud/storage');
+const {format} = require('util');
+
+const googleCloud = new Storage({
+    keyFilename:path.join(__dirname,'../sitios-trabajo-679d5ad729ed.json'),
+    projectId:'sitios-trabajo'
+})
+
+const bucket = googleCloud.bucket('multiplicador');
+
 
 function autoresApi(app) {
     const router = express.Router();
@@ -40,15 +51,33 @@ function autoresApi(app) {
         }
     });
 
-    router.post('/',upload.single('foto'),async(req,res,next)=>{
+    router.post('/',upload.single('avatar'),async(req,res,next)=>{
         const {body:autor} = req;
-        const {file:avatar} = req;
         try {
-            const data = await autores.create(autor,avatar);
-            res.status(200).json({
-                info:data,
-                message:'Se ha creado el autor'
+            if (!req.file) {
+                res.status(400).send('No file uploaded.');
+                return;
+            }
+            // Create a new blob in the bucket and upload the file data.
+            const blob = bucket.file(req.file.originalname);
+            const blobStream = blob.createWriteStream();
+            
+            blobStream.on('error', (err) => {
+            next(err);
             });
+            
+            blobStream.on('finish', async() => {
+                // The public URL can be used to directly access the file via HTTP.
+                const avatar = format(
+                  `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+                );
+                const data = await autores.create(autor,avatar);
+                res.status(200).json({
+                    info:data,
+                    message:'Se ha creado el autor'
+                });
+            });
+            blobStream.end(req.file.buffer);
         } catch (error) {
             next(error)
         }

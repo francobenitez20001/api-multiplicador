@@ -25,7 +25,7 @@ class AutoresModel{
 
     create(collection,body,avatar){
         return new Promise((resolve,reject)=>{
-            let query = `INSERT INTO ${collection} (nombre,apellido,descripcion,foto,twitter) VALUES ('${body.nombre}','${body.apellido}','${body.descripcion}','${avatar.filename}','${avatar.twitter}')`;
+            let query = `INSERT INTO ${collection} (nombre,apellido,descripcion,foto,twitter) VALUES ('${body.nombre}','${body.apellido}','${body.descripcion}','${avatar}','${avatar.twitter}')`;
             this.db.query(query,(error,results,fields)=>{
                 if(error) throw reject(error);
                 resolve(results);

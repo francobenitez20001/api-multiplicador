@@ -50,6 +50,16 @@ function archivosApi(app) {
         }
     });
 
+    router.post('/storage',async(req,res,next)=>{
+        const {body:imagenes} = req;
+        console.log(req);
+        
+        res.status(200).json({
+            info:imagenes,
+            message:'Se ha creado el archivo'
+        });
+    });
+
     router.put('/:id',async(req,res,next)=>{
         const {id} = req.params;
         const {body:archivo} = req;
