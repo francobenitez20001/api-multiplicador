@@ -2,17 +2,7 @@ const express = require('express');
 const AutoresService = require('../services/autores.js');
 const NotasService = require('../services/Notas');
 const upload = require('../lib/multer');
-const path = require('path');
-const {Storage} = require('@google-cloud/storage');
-const {format} = require('util');
-
-const googleCloud = new Storage({
-    keyFilename:path.join(__dirname,'../sitios-trabajo-679d5ad729ed.json'),
-    projectId:'sitios-trabajo'
-})
-
-const bucket = googleCloud.bucket('multiplicador');
-
+const CloudStorage = require('../lib/CloudStorage');
 
 function autoresApi(app) {
     const router = express.Router();
@@ -20,6 +10,7 @@ function autoresApi(app) {
     app.use("/api/autores",router);
     const autores = new AutoresService();
     const notas = new NotasService();
+    const cs = new CloudStorage();
 
     router.get('/',async (req,res,next)=>{
         try {
@@ -58,43 +49,52 @@ function autoresApi(app) {
                 res.status(400).send('No file uploaded.');
                 return;
             }
-            // Create a new blob in the bucket and upload the file data.
-            const blob = bucket.file(req.file.originalname);
-            const blobStream = blob.createWriteStream();
-            
-            blobStream.on('error', (err) => {
-            next(err);
-            });
-            
-            blobStream.on('finish', async() => {
-                // The public URL can be used to directly access the file via HTTP.
-                const avatar = format(
-                  `https://storage.googleapis.com/${bucket.name}/${blob.name}`
-                );
+            cs.upload(req.file).then(async avatar=>{
                 const data = await autores.create(autor,avatar);
                 res.status(200).json({
                     info:data,
                     message:'Se ha creado el autor'
                 });
-            });
-            blobStream.end(req.file.buffer);
+            }).catch(err=>{
+                res.status(500).json({
+                    error:err
+                })
+            })
         } catch (error) {
-            next(error)
+            res.status(500).json({
+                error
+            })
         }
     });
 
-    router.put('/:id',upload.single('foto'),async(req,res,next)=>{
+    router.put('/:id',upload.single('avatar'),async(req,res,next)=>{
         const {id} = req.params;
         const {body:autor} = req;
         const {file:foto} = req;
         try {
-            const data = await autores.update(autor,id,foto);
-            res.status(200).json({
-                info:data,
-                message:'Autor modificado'
-            });
+            if (!req.file) {
+                const data = await autores.update(autor,id);
+                res.status(200).json({
+                    info:data,
+                    message:'Autor modificado'
+                });
+                return;
+            }
+            cs.upload(foto).then(async foto=>{
+                const data = await autores.update(autor,id,foto);
+                res.status(200).json({
+                    info:data,
+                    message:'Autor modificado'
+                });
+            }).catch(err=>{
+                res.status(500).json({
+                    error:err
+                })
+            })
         } catch (error) {
-            next(error);
+            res.status(500).json({
+                error
+            })
         }
     })
 

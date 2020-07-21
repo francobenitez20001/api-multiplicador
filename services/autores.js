@@ -28,7 +28,7 @@ class AutoresService {
         return datos;
     }
 
-    async update(body,id,foto){
+    async update(body,id,foto=null){
         const datos = await this.AutoresModel.update(this.collection,body,id,foto).then(res=>{
             return res;
         })

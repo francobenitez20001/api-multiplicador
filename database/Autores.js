@@ -22,7 +22,7 @@ class AutoresModel{
 
     create(collection,body,avatar){
         return new Promise((resolve,reject)=>{
-            let query = `INSERT INTO ${collection} (nombre,apellido,descripcion,foto,twitter) VALUES ('${body.nombre}','${body.apellido}','${body.descripcion}','${avatar}','${avatar.twitter}')`;
+            let query = `INSERT INTO ${collection} (nombre,apellido,descripcion,foto,twitter) VALUES ('${body.nombre}','${body.apellido}','${body.descripcion}','${avatar}','${body.twitter}')`;
             connection.query(query,(error,results,fields)=>{
                 if(error) throw reject(error);
                 resolve(results);
@@ -30,12 +30,17 @@ class AutoresModel{
         })
     };
 
-    update(collection,body,id,foto){
+    update(collection,body,id,foto=null){
         return new Promise((resolve,reject)=>{
             let query = `UPDATE ${collection} SET nombre = '${body.nombre}',apellido = '${body.apellido}',
-                                                  descripcion = '${body.descripcion}', foto = '${foto.filename}',
+                                                  descripcion = '${body.descripcion}', foto = '${foto}',
                                                   twitter = '${body.twitter}'
                         WHERE idAutor = ${id}`;
+            if(foto==null){
+                query = `UPDATE ${collection} SET nombre = '${body.nombre}',apellido = '${body.apellido}',
+                                                  descripcion = '${body.descripcion}',twitter = '${body.twitter}'
+                        WHERE idAutor = ${id}`;
+            }
             connection.query(query,(error,res,fiels)=>{
                 if(error) throw reject(error);
                 resolve(res);
