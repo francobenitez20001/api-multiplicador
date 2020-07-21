@@ -5,7 +5,7 @@ class AutoresModel{
     getAll(collection){
         return new Promise((resolve,reject)=>{
             connection.query(`SELECT * FROM ${collection}`,(err,res,fields)=>{
-                if(err) throw reject(err);
+                if(err) throw console.log(err);
                 resolve(res);
             })
         })
