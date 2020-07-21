@@ -11,6 +11,11 @@ function notasApi(app) {
     const archivos = new ArchivosService();
     const cs = new CloudStorage();
     router.get('/',async(req,res,next)=>{
+        if(!req.query){
+            return res.status(400).json({
+                info:'Argumentos no encontrados'
+            })
+        }
         try{
             const {limit} = req.query;
             const data = await notas.getNotas(limit);
