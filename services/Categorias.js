@@ -22,16 +22,16 @@ class CategoriasService{
         return datos;
     };
 
-    async createCategoria(body){
-        const datos = await this.categoriasModel.create(this.collection,body).then(res=>{
+    async createCategoria(body,icono){
+        const datos = await this.categoriasModel.create(this.collection,body,icono).then(res=>{
             console.log(res);
             return res;
         })
         return datos;
     }
 
-    async updateCategoria(body,id){
-        const datos = await this.categoriasModel.update(this.collection,body,id).then(res=>{
+    async updateCategoria(body,id,icono=null){
+        const datos = await this.categoriasModel.update(this.collection,body,id,icono).then(res=>{
             console.log(res);
             return res;
         });

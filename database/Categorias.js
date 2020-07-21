@@ -20,9 +20,9 @@ class CategoriasModel{
         })
     }
 
-    create(collection,body){
+    create(collection,body,icono){
         return new Promise((resolve,reject)=>{
-            const query = `CALL SP_CATEGORIA_ADD_UPDATE(${body.idCategoria},'${body.categoria}','${body.icono}');`;
+            const query = `CALL SP_CATEGORIA_ADD_UPDATE(0,'${body.categoria}','${icono}');`;
             connection.query(query,(error,results,fields)=>{
                 if(error) throw reject(error);
                 resolve(results);
@@ -30,9 +30,9 @@ class CategoriasModel{
         })
     };
 
-    update(collection,body,id){
+    update(collection,body,id,icono){
         return new Promise((resolve,reject)=>{
-            const query = `CALL SP_CATEGORIA_ADD_UPDATE(${id},'${body.categoria}','${body.icono}');`;
+            const query = `CALL SP_CATEGORIA_ADD_UPDATE(${id},'${body.categoria}','${icono}');`;
             connection.query(query,(error,res,fiels)=>{
                 if(error) throw reject(error);
                 resolve(res);
