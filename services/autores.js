@@ -17,6 +17,8 @@ class AutoresService {
     async getAutor(id){
         const datos = await this.AutoresModel.get(this.collection,id).then(res=>{
             return res;
+        }).catch(err=>{
+            return err;
         })
         return datos;
     }
