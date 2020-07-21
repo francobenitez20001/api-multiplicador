@@ -1,13 +1,10 @@
-const MysqlLib = require('../lib/mysql');
+const connection = require('../lib/mysql');
 
 class AutoresModel{
-    constructor(){
-        this.db = new MysqlLib();
-    }
 
     getAll(collection){
         return new Promise((resolve,reject)=>{
-            this.db.query(`SELECT * FROM ${collection}`,(err,res,fields)=>{
+            connection.query(`SELECT * FROM ${collection}`,(err,res,fields)=>{
                 if(err) throw reject(err);
                 resolve(res);
             })
@@ -16,7 +13,7 @@ class AutoresModel{
 
     get(collection,id){
         return new Promise((resolve,reject)=>{
-            this.db.query(`SELECT * FROM ${collection} WHERE idAutor = ${id}`,(err,results,fields)=>{
+            connection.query(`SELECT * FROM ${collection} WHERE idAutor = ${id}`,(err,results,fields)=>{
                 if(err) throw reject(err);
                 resolve(results);
             })
@@ -26,7 +23,7 @@ class AutoresModel{
     create(collection,body,avatar){
         return new Promise((resolve,reject)=>{
             let query = `INSERT INTO ${collection} (nombre,apellido,descripcion,foto,twitter) VALUES ('${body.nombre}','${body.apellido}','${body.descripcion}','${avatar}','${avatar.twitter}')`;
-            this.db.query(query,(error,results,fields)=>{
+            connection.query(query,(error,results,fields)=>{
                 if(error) throw reject(error);
                 resolve(results);
             })
@@ -39,7 +36,7 @@ class AutoresModel{
                                                   descripcion = '${body.descripcion}', foto = '${foto.filename}',
                                                   twitter = '${body.twitter}'
                         WHERE idAutor = ${id}`;
-            this.db.query(query,(error,res,fiels)=>{
+            connection.query(query,(error,res,fiels)=>{
                 if(error) throw reject(error);
                 resolve(res);
             })
@@ -48,7 +45,7 @@ class AutoresModel{
 
     delete(collection,id){
         return new Promise((resolve,reject)=>{
-            this.db.query(`DELETE FROM ${collection} WHERE idAutor = ${id}`,(err,res,fields)=>{
+            connection.query(`DELETE FROM ${collection} WHERE idAutor = ${id}`,(err,res,fields)=>{
                 if(err) throw reject(err);
                 resolve(res);
             })

@@ -1,13 +1,10 @@
-const MysqlLib = require('../lib/mysql');
+const connection = require('../lib/mysql');
 
 class CategoriasModel{
-    constructor(){
-        this.db = new MysqlLib();
-    }
-
+    
     getAll(collection){
         return new Promise((resolve,reject)=>{
-            this.db.query(`SELECT * FROM ${collection}`,(err,res,fields)=>{
+            connection.query(`SELECT * FROM ${collection}`,(err,res,fields)=>{
                 if(err) throw reject(err);
                 resolve(res);
             })
@@ -16,7 +13,7 @@ class CategoriasModel{
  
     get(collection,id){
         return new Promise((resolve,reject)=>{
-            this.db.query(`SELECT * FROM ${collection} WHERE idCategoria = ${id}`,(err,results,fields)=>{
+            connection.query(`SELECT * FROM ${collection} WHERE idCategoria = ${id}`,(err,results,fields)=>{
                 if(err) throw reject(err);
                 resolve(results);
             })
@@ -26,7 +23,7 @@ class CategoriasModel{
     create(collection,body){
         return new Promise((resolve,reject)=>{
             const query = `CALL SP_CATEGORIA_ADD_UPDATE(${body.idCategoria},'${body.categoria}','${body.icono}');`;
-            this.db.query(query,(error,results,fields)=>{
+            connection.query(query,(error,results,fields)=>{
                 if(error) throw reject(error);
                 resolve(results);
             })
@@ -36,7 +33,7 @@ class CategoriasModel{
     update(collection,body,id){
         return new Promise((resolve,reject)=>{
             const query = `CALL SP_CATEGORIA_ADD_UPDATE(${id},'${body.categoria}','${body.icono}');`;
-            this.db.query(query,(error,res,fiels)=>{
+            connection.query(query,(error,res,fiels)=>{
                 if(error) throw reject(error);
                 resolve(res);
             })
@@ -45,7 +42,7 @@ class CategoriasModel{
 
     delete(collection,id){
         return new Promise((resolve,reject)=>{
-            this.db.query(`CALL SP_CATEGORIA_DELETE(${id})`,(err,res,fields)=>{
+            connection.query(`CALL SP_CATEGORIA_DELETE(${id})`,(err,res,fields)=>{
                 if(err) throw reject(err);
                 resolve(res);
             })
