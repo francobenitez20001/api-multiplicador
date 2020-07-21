@@ -1,7 +1,9 @@
 const ArchivosModel = require('../database/Archivos');
+const CloudStorage = require('../lib/CloudStorage');
 
 class ArchivosService{
     constructor(){
+        this.cloudStorage = new CloudStorage();
         this.ArchivosModel = new ArchivosModel();
         this.collection = 'archivos';
     }
@@ -30,18 +32,16 @@ class ArchivosService{
         return datos;
     }
 
-    async createArchivo(body,imagenes){
-        console.log(imagenes);
-        
-        const datos = await this.ArchivosModel.create(this.collection,body,imagenes).then(res=>{
+    async createArchivo(idNota,imagen){
+        const datos = await this.ArchivosModel.create(this.collection,idNota,imagen).then(res=>{
             console.log(res);
             return res;
         })
         return datos;
     }
 
-    async updateArchivo(body,id){
-        const datos = await this.ArchivosModel.update(this.collection,body,id).then(res=>{
+    async updateArchivo(archivo,id){
+        const datos = await this.ArchivosModel.update(this.collection,archivo,id).then(res=>{
             console.log(res);
             return res;
         });
@@ -54,6 +54,19 @@ class ArchivosService{
             return res;
         })
         return datos;
+    }
+
+    async subirArchivosVarios(archivosArray,idNota){
+        for (let index = 0; index < archivosArray.length; index++) {
+            await this.cloudStorage.upload(archivosArray[index]).then( async link=>{
+                await this.createArchivo(idNota,link).then(res => {
+                    console.log('subido');
+                }).catch(err => {
+                    throw new Error(err);
+                });
+            });   
+        }
+        return;
     }
 
 }

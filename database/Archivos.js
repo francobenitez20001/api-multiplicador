@@ -28,30 +28,21 @@ class ArchivosModel{
         })
     }
 
-    create(collection,body,files){
+    create(collection,idNota,imagen){
         return new Promise((resolve,reject)=>{
-            let logError = [];
-            for (let index = 0; index < files.length; index++) {
-                connection.query(`
-                    CALL SP_ARCHIVOS_ADD_UPDATE(${body.idArchivo},${body.idNota},'${files[index].filename}')`,(error,results,fields)=>{
-                    if(error){
-                        console.log(error);
-                        
-                        reject(error)
-                    };
-                })
-            };
-            if(logError.length==0){
-                resolve('Imagenes subidas')
-            }else{
-                reject('Problemas al subir los archivos a la db');
-            }
+            connection.query(`CALL SP_ARCHIVOS_ADD_UPDATE(0,${idNota},'${imagen}')`,(error,results,fields)=>{
+                if(!error){
+                    resolve(results);
+                }else{
+                    reject(error);
+                }
+            })
         })
     };
 
-    update(collection,body,id){
+    update(collection,archivo,id){
         return new Promise((resolve,reject)=>{
-            let query = `CALL SP_ARCHIVOS_ADD_UPDATE(${id},${body.idNota},'${body.archivo}')`;
+            let query = `CALL SP_ARCHIVOS_ADD_UPDATE(${id},0,'${archivo}')`;
             connection.query(query,(error,res,fiels)=>{
                 if(error) throw reject(error);
                 resolve(res);
