@@ -38,8 +38,8 @@ class NotasService{
         return datos;
     }
 
-    async updateNota(body,id){
-        const datos = await this.notasModel.update(this.collection,body,id).then(res=>{
+    async updateNota(body,id,header=null){
+        const datos = await this.notasModel.update(this.collection,body,id,header).then(res=>{
             console.log(res);
             return res;
         });

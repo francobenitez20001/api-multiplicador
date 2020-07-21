@@ -2,13 +2,14 @@ const express = require('express');
 const NotasService = require('../services/Notas');
 const ArchivosService = require('../services/Archivos');
 const upload = require('../lib/multer');
+const CloudStorage = require('../lib/CloudStorage');
 
 function notasApi(app) {
     const router = express.Router();
     app.use('/api/notas',router);
     const notas = new NotasService();
     const archivos = new ArchivosService();
-
+    const cs = new CloudStorage();
     router.get('/',async(req,res,next)=>{
         try{
             const {limit} = req.query;
@@ -43,30 +44,50 @@ function notasApi(app) {
         if(req.file == undefined){
             return res.status(500).json({
                 message:'No se encontro la imagen'
-            })
+            });
         };
         const {body:nota} = req;
         const {file:imagen} = req;
         try {
-            const data = await notas.createNota(nota,imagen);
-            console.log(req);
-            res.status(200).json({
-                data:data,
-                message:'Nota agregada'
+            cs.upload(imagen).then(async link => {
+                const data = await notas.createNota(nota,link);
+                //console.log(req);
+                res.status(200).json({
+                    data:data,
+                    message:'Nota agregada'
+                });
+            }).catch(err => {
+                res.status(500).json({
+                    error:err
+                })
             });
         } catch (error) {
             next(error);
         }
     })
 
-    router.put('/:id',async(req,res,next)=>{
+    router.put('/:id',upload.single('header'),async(req,res,next)=>{
         const {body:nota} = req;
         const {id} = req.params;
         try {
-            const data = await notas.updateNota(nota,id);
-            res.status(200).json({
-                data:data,
-                message:'Nota modificada'
+            if(!req.file){
+                const data = await notas.updateNota(nota,id);
+                return res.status(200).json({
+                    data:data,
+                    message:'Nota modificada'
+                });
+            }
+            const {file:imagen} = req;
+            cs.upload(imagen).then(async header => {
+                const data = await notas.updateNota(nota,id,header);
+                res.status(200).json({
+                    data:data,
+                    message:'Nota modificada'
+                });
+            }).catch(err => {
+                res.status(500).json({
+                    error:err
+                })
             });
         } catch (error) {
             next(error);

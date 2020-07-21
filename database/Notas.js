@@ -56,8 +56,8 @@ class NotasModel{
 
     create(collection,body,imagen){
         return new Promise((resolve,reject)=>{
-            const query = `CALL SP_NOTAS_ADD_UPDATE(${body.idNota},${body.idAutor},${body.idCategoria},
-                '${body.titulo}','${body.resumen}','${body.contenido}','${imagen.filename}',${body.estado},'${body.fecha}');`;
+            const query = `CALL SP_NOTAS_ADD_UPDATE(0,${body.idAutor},${body.idCategoria},
+                '${body.titulo}','${body.resumen}','${body.contenido}','${imagen}',${body.estado},'${body.fecha}');`;
             connection.query(query,(error,results,fields)=>{
                 if(error) return reject(error);
                 resolve(results);
@@ -65,10 +65,10 @@ class NotasModel{
         })
     };
 
-    update(collection,body,id){
+    update(collection,body,id,header){
         return new Promise((resolve,reject)=>{
             const query = `CALL SP_NOTAS_ADD_UPDATE(${id},${body.idAutor},${body.idCategoria},
-                '${body.titulo}','${body.resumen}','${body.contenido}','${body.header}',${body.estado},'${body.fecha}');`;
+                '${body.titulo}','${body.resumen}','${body.contenido}','${header}',${body.estado},'${body.fecha}');`;
             connection.query(query,(error,res,fiels)=>{
                 if(error) throw reject(error);
                 resolve(res);
